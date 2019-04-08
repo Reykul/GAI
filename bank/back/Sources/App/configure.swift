@@ -5,7 +5,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     try services.register(FluentMySQLProvider())
     services.register(LoggerMiddleware.self)
     
-    let serverConfig = NIOServerConfig.default(hostname: "localhost", port: 8081)
+    let serverConfig = NIOServerConfig.default(hostname: "localhost", port: 8082)
     services.register(serverConfig)
     
     var databases = DatabasesConfig()
@@ -14,12 +14,12 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
         port: 3306,
         username: "root",
         password: "root",
-        database: "cars"
+        database: "bank"
     )
     let database = MySQLDatabase(config: mysqlConfig)
     databases.add(database: database, as: .mysql)
     services.register(databases)
-
+    
     let router = EngineRouter.default()
     try routes(router)
     services.register(router, as: Router.self)
@@ -28,11 +28,9 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     middlewares.use(LoggerMiddleware.self)
     middlewares.use(ErrorMiddleware.self)
     services.register(middlewares)
-
+    
     var migrations = MigrationConfig()
-    migrations.add(model: Proxy.self, database: .mysql)
-    migrations.add(model: StateDuty.self, database: .mysql)
-    migrations.add(model: Car.self, database: .mysql)
-    migrations.add(model: SaleContract.self, database: .mysql)
+    migrations.add(model: BankAccount.self, database: .mysql)
+    migrations.add(model: Payment.self, database: .mysql)
     services.register(migrations)
 }

@@ -18,11 +18,6 @@ final class CarController {
         }
     }
     
-    func search(_ req: Request) throws -> Future<[Car]> {
-        let name: String = try req.parameters.next(String.self)
-        return Car.query(on: req).all()
-    }
-        
     func delete(_ req: Request) throws -> Future<HTTPStatus> {
         return try req.parameters.next(Car.self).flatMap { car in
             return car.delete(on: req)
