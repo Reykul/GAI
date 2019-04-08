@@ -13,6 +13,12 @@ final class StateDuty: MySQLModel {
     }
 }
 
+extension SaleContract {
+    var stateDutyCar: Parent<SaleContract, Car> {
+        return parent(\.carId)
+    }
+}
+
 extension StateDuty: Migration { }
 extension StateDuty: Content { }
 extension StateDuty: Parameter { }

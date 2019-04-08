@@ -28,7 +28,6 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
 
     var migrations = MigrationConfig()
     migrations.add(model: Proxy.self, database: .mysql)
-    migrations.add(model: Person.self, database: .mysql)
     migrations.add(model: StateDuty.self, database: .mysql)
     migrations.add(model: Car.self, database: .mysql)
     migrations.add(model: SaleContract.self, database: .mysql)

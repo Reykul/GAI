@@ -12,21 +12,39 @@ enum Condition: String, MySQLEnumType, ReflectionDecodable {
 }
 
 final class Car: MySQLModel {
+    typealias ID = Int
     var id: Int?
     var brand: String
     var model: String
-    var personId: Person.ID?
+    var ownerId: Int?
     var condition: Condition?
     var isInCarjacking: Bool
     
-    
-    init(id: Int? = nil, brand: String, model: String, personId: Person.ID? = nil, condition: Condition? = Condition.new, isInCarjacking: Bool) {
+    init(id: Int? = nil, brand: String, model: String, ownerId: Int? = nil, condition: Condition? = Condition.new, isInCarjacking: Bool) {
         self.id = id
         self.brand = brand
         self.model = model
-        self.personId = personId
+        self.ownerId = ownerId
         self.condition = condition
         self.isInCarjacking = isInCarjacking
+    }
+}
+
+extension Car {
+    var proxys: Children<Car, Proxy> {
+        return self.children(\.carId)
+    }
+}
+
+extension Car {
+    var saleContracts: Children<Car, SaleContract> {
+        return self.children(\.carId)
+    }
+}
+
+extension Car {
+    var saleDuties: Children<Car, StateDuty> {
+        return self.children(\.carId)
     }
 }
 
