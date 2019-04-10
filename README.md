@@ -11,7 +11,8 @@
 
 # автомобили
 frontend: React.js  
-backend: Vapor(Swift)  
+backend: Vapor(Swift)
+database: Fluent ORM(MySQL)  
 Routes:  
   * /car  
     + GET  - получить список всех авто;  
@@ -47,6 +48,7 @@ Routes:
 # банк
 frontend: React.js  
 backend: Vapor(Swift)  
+database: Fluent ORM(MySQL)  
 Routes:  
   * /payment
     + GET - получить список переводов
