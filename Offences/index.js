@@ -15,7 +15,7 @@ const conn = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'drivers'
+  database: 'offences'
 });
 
 //connect to database
@@ -35,10 +35,10 @@ app.use('/assets', express.static(__dirname + '/public'));
 
 //route for homepage
 app.get('/', (req, res) => {
-  let sql = "SELECT * FROM driver";
+  let sql = "SELECT * FROM offence";
   let query = conn.query(sql, (err, results) => {
     if (err) throw err;
-    res.render('driver_view', {
+    res.render('offence_view', {
       results: results
     });
   });
@@ -47,11 +47,12 @@ app.get('/', (req, res) => {
 //route for insert data
 app.post('/save', (req, res) => {
   let data = {
-    driver_name: req.body.driver_name,
-    driver_license: req.body.driver_license,
-    deprived_of_license: req.body.deprived_of_license
+    driver_id: req.body.driver_id,
+    offence_description: req.body.offence_description,
+    offence_cost: req.body.offence_cost,
+    deprived_of_license: req.body.deprived_of_license,
   };
-  let sql = "INSERT INTO driver SET ?";
+  let sql = "INSERT INTO offence SET ?";
   let query = conn.query(sql, data, (err, results) => {
     if (err) throw err;
     res.redirect('/');
@@ -60,19 +61,23 @@ app.post('/save', (req, res) => {
 
 //route for update data
 app.post('/update', (req, res) => {
-  let sql = "UPDATE driver SET driver_name='" + req.body.driver_name
-    + "', driver_license='" + req.body.driver_license
+  let sql = "UPDATE offence SET driver_id='" + req.body.driver_id
+    + "', offence_description='" + req.body.offence_description
+    + "', offence_cost='" + req.body.offence_cost
     + "', deprived_of_license='" + req.body.deprived_of_license
-    + "'  WHERE driver_id=" + req.body.id;
+    + "'  WHERE offence_id=" + req.body.id;
   let query = conn.query(sql, (err, results) => {
-    if (err) throw err;
+    if (err) {
+      console.log('ERROR');
+      throw err;
+    }
     res.redirect('/');
   });
 });
 
 //route for delete data
 app.post('/delete', (req, res) => {
-  let sql = "DELETE FROM driver WHERE driver_id=" + req.body.driver_id + "";
+  let sql = "DELETE FROM offence WHERE offence_id=" + req.body.offence_id + "";
   let query = conn.query(sql, (err, results) => {
     if (err) throw err;
     res.redirect('/');
@@ -80,6 +85,6 @@ app.post('/delete', (req, res) => {
 });
 
 //server listening
-app.listen(8000, () => {
-  console.log('Server is running at port 8000');
+app.listen(8001, () => {
+  console.log('Server is running at port 8001');
 });
