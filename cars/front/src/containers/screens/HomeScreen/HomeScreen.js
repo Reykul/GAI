@@ -6,6 +6,7 @@ export default class HomeScreen extends Component {
   state = {
     isModalVisible: false,
     isProxyModalVisible: false,
+    isSaleContractModalVisible: false,
   };
   componentDidMount() {
     const { fetchCars } = this.props;
@@ -21,12 +22,20 @@ export default class HomeScreen extends Component {
     this.setState({ isProxyModalVisible: true });
   };
 
+  handleSaleContractButtonPress = () => {
+    this.setState({ isSaleContractModalVisible: true });
+  };
+
   handleModalClose = () => {
     this.setState({ isModalVisible: false });
   };
 
   handleProxyModalClose = () => {
     this.setState({ isProxyModalVisible: false });
+  };
+
+  handleSaleContractModalClose = () => {
+    this.setState({ isSaleContractModalVisible: false });
   };
 
   handleSubmit(event) {
@@ -70,9 +79,35 @@ export default class HomeScreen extends Component {
     }
   }
 
+  handleSaleContractSubmit(event) {
+    const { sale } = this.props;
+
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const sellerId = form.formSaleContractSellerId.value;
+    const buyerId = form.formSaleContractBuyerId.value;
+    const carId = form.formSaleContractCarId.value;
+
+    if (sellerId && buyerId && carId) {
+      sale(
+        {
+          sellerId: parseInt(sellerId, 10),
+          buyerId: parseInt(buyerId, 10),
+          carId: parseInt(carId, 10),
+        },
+        () => this.handleSaleContractModalClose(),
+      );
+    }
+  }
+
   render() {
     const { cars } = this.props;
-    const { isModalVisible, isProxyModalVisible } = this.state;
+    const {
+      isModalVisible,
+      isProxyModalVisible,
+      isSaleContractModalVisible,
+    } = this.state;
 
     return (
       <div className="HomeScreen">
@@ -103,6 +138,12 @@ export default class HomeScreen extends Component {
           </tbody>
         </Table>
         <div className="buttons">
+          <Button
+            onClick={this.handleSaleContractButtonPress}
+            variant="outline-primary"
+          >
+            Sale contract
+          </Button>
           <Button onClick={this.handleProxyButtonPress} variant="outline-info">
             Add proxy
           </Button>
@@ -179,6 +220,37 @@ export default class HomeScreen extends Component {
                 <Form.Control placeholder="Auto #" />
               </Form.Group>
               <Button type="submit">Add proxy</Button>
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          size="lg"
+          show={isSaleContractModalVisible}
+          onHide={this.handleSaleContractModalClose}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="example-modal-sizes-title-lg">
+              Sale contract
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={e => this.handleSaleContractSubmit(e)}>
+              <Form.Group controlId="formSaleContractSellerId">
+                <Form.Label>Seller #</Form.Label>
+                <Form.Control placeholder="Seller #" />
+              </Form.Group>
+              <Form.Group controlId="formSaleContractBuyerId">
+                <Form.Label>Buyer #</Form.Label>
+                <Form.Control placeholder="Buyer #" />
+              </Form.Group>
+              <Form.Group controlId="formSaleContractCarId">
+                <Form.Label>Car #</Form.Label>
+                <Form.Control placeholder="Car #" />
+              </Form.Group>
+              <Button type="submit">Sale</Button>
             </Form>
           </Modal.Body>
         </Modal>
