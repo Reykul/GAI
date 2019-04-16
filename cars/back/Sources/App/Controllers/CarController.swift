@@ -19,8 +19,13 @@ final class CarController {
     }
     
     func delete(_ req: Request) throws -> Future<HTTPStatus> {
-        return try req.parameters.next(Car.self).flatMap { car in
-            return car.delete(on: req)
-            }.transform(to: .ok)
+        let carId = try req.query.get(Int.self, at: "carId")
+        return Car.find(carId, on: req).flatMap { car in
+            guard let car = car else {
+                throw Abort(.notFound)
+            }
+            
+            return car.delete(on: req).transform(to: HTTPStatus.ok)
+        }
     }
 }

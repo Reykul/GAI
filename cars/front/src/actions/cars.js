@@ -12,6 +12,10 @@ export const ADD_PROXY_REQUEST = 'ADD_PROXY_REQUEST';
 export const ADD_PROXY_SUCCESS = 'ADD_PROXY_SUCCESS';
 export const ADD_PROXY_FAILURE = 'ADD_PROXY_FAILURE';
 
+export const DELETE_REQUEST = 'DELETE_REQUEST';
+export const DELETE_SUCCESS = 'DELETE_SUCCESS';
+export const DELETE_FAILURE = 'DELETE_FAILURE';
+
 export function fetchCars() {
   return (dispatch, getState) => {
     dispatch({
@@ -144,6 +148,33 @@ export function addProxySuccess(data) {
 export function addProxyFailure(error) {
   return {
     type: ADD_PROXY_FAILURE,
+    error,
+  };
+}
+
+export function deleteCar(carId) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ADD_PROXY_REQUEST,
+      data: carId,
+    });
+
+    fetch(`${endpoints.DELETE_CAR}/?carId=${carId}`, {
+      method: 'DELETE',
+    });
+  };
+}
+
+export function deleteCarSuccess(data) {
+  return {
+    type: DELETE_SUCCESS,
+    data,
+  };
+}
+
+export function deleteCarFailure(error) {
+  return {
+    type: DELETE_FAILURE,
     error,
   };
 }

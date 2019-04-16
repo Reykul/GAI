@@ -1,7 +1,12 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import HomeScreen from './HomeScreen';
-import { fetchCars, registerCar, addProxy } from '../../../actions/cars';
+import {
+  fetchCars,
+  registerCar,
+  addProxy,
+  deleteCar,
+} from '../../../actions/cars';
 import { sale } from '../../../actions/sale';
 import { stateDuty } from '../../../actions/stateDuty';
 
@@ -11,7 +16,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { fetchCars, registerCar, addProxy, sale, stateDuty },
+    { fetchCars, registerCar, deleteCar, addProxy, sale, stateDuty },
     dispatch,
   );
 

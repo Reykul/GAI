@@ -120,11 +120,20 @@ export default class HomeScreen extends Component {
     const amount = form.formStateDutyAmount.value;
 
     if (carId && amount) {
-      stateDuty({
-        carId: parseInt(carId, 10),
-        amount: parseFloat(amount),
-      }, () => this.handleStateDutyModalClose());
+      stateDuty(
+        {
+          carId: parseInt(carId, 10),
+          amount: parseFloat(amount),
+        },
+        () => this.handleStateDutyModalClose(),
+      );
     }
+  }
+
+  handleDelete(car) {
+    const { deleteCar } = this.props;
+
+    deleteCar(parseInt(car.id, 10));
   }
 
   render() {
@@ -159,6 +168,14 @@ export default class HomeScreen extends Component {
                 <td>{car.condition}</td>
                 <td>
                   {car.isInCarjacking ? `${car.isInCarjacking}` : 'false'}
+                </td>
+                <td>
+                  <Button
+                    onClick={() => this.handleDelete(car)}
+                    variant="danger"
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}
