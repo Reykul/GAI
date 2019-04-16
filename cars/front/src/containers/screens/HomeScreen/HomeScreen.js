@@ -7,6 +7,7 @@ export default class HomeScreen extends Component {
     isModalVisible: false,
     isProxyModalVisible: false,
     isSaleContractModalVisible: false,
+    isStateDutyModalVisible: false,
   };
   componentDidMount() {
     const { fetchCars } = this.props;
@@ -26,6 +27,10 @@ export default class HomeScreen extends Component {
     this.setState({ isSaleContractModalVisible: true });
   };
 
+  handleStateDutyButtonPress = () => {
+    this.setState({ isStateDutyModalVisible: true });
+  };
+
   handleModalClose = () => {
     this.setState({ isModalVisible: false });
   };
@@ -36,6 +41,10 @@ export default class HomeScreen extends Component {
 
   handleSaleContractModalClose = () => {
     this.setState({ isSaleContractModalVisible: false });
+  };
+
+  handleStateDutyModalClose = () => {
+    this.setState({ isStateDutyModalVisible: false });
   };
 
   handleSubmit(event) {
@@ -101,12 +110,30 @@ export default class HomeScreen extends Component {
     }
   }
 
+  handleStateDutySubmit(event) {
+    const { stateDuty } = this.props;
+
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const carId = form.formStateDutyCarId.value;
+    const amount = form.formStateDutyAmount.value;
+
+    if (carId && amount) {
+      stateDuty({
+        carId: parseInt(carId, 10),
+        amount: parseFloat(amount),
+      }, () => this.handleStateDutyModalClose());
+    }
+  }
+
   render() {
     const { cars } = this.props;
     const {
       isModalVisible,
       isProxyModalVisible,
       isSaleContractModalVisible,
+      isStateDutyModalVisible,
     } = this.state;
 
     return (
@@ -138,6 +165,12 @@ export default class HomeScreen extends Component {
           </tbody>
         </Table>
         <div className="buttons">
+          <Button
+            onClick={this.handleStateDutyButtonPress}
+            variant="outline-secondary"
+          >
+            State duty
+          </Button>
           <Button
             onClick={this.handleSaleContractButtonPress}
             variant="outline-primary"
@@ -251,6 +284,33 @@ export default class HomeScreen extends Component {
                 <Form.Control placeholder="Car #" />
               </Form.Group>
               <Button type="submit">Sale</Button>
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          size="lg"
+          show={isStateDutyModalVisible}
+          onHide={this.handleStateDutyModalClose}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="example-modal-sizes-title-lg">
+              State duty
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={e => this.handleStateDutySubmit(e)}>
+              <Form.Group controlId="formStateDutyCarId">
+                <Form.Label>Car #</Form.Label>
+                <Form.Control placeholder="Car #" />
+              </Form.Group>
+              <Form.Group controlId="formStateDutyAmount">
+                <Form.Label>Amount</Form.Label>
+                <Form.Control placeholder="Amount" />
+              </Form.Group>
+              <Button type="submit">Pay</Button>
             </Form>
           </Modal.Body>
         </Modal>
