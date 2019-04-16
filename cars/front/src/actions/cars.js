@@ -8,6 +8,10 @@ export const REGISTER_CAR_REQUEST = 'REGISTER_CAR_REQUEST';
 export const REGISTER_CAR_SUCCESS = 'REGISTER_CAR_SUCCESS';
 export const REGISTER_CAR_FAILURE = 'REGISTER_CAR_FAILURE';
 
+export const ADD_PROXY_REQUEST = 'ADD_PROXY_REQUEST';
+export const ADD_PROXY_SUCCESS = 'ADD_PROXY_SUCCESS';
+export const ADD_PROXY_FAILURE = 'ADD_PROXY_FAILURE';
+
 export function fetchCars() {
   return (dispatch, getState) => {
     dispatch({
@@ -18,6 +22,7 @@ export function fetchCars() {
       .then(response => {
         if (!response.ok) {
           dispatch(fetchCarsFailure(''));
+          throw new Error(response);
         }
         return response;
       })
@@ -64,6 +69,7 @@ export function registerCar(data, callback = () => {}) {
       .then(response => {
         if (!response.ok) {
           dispatch(registerCarFailure(''));
+          throw new Error(response);
         }
         return response;
       })
@@ -91,5 +97,53 @@ export function registerCarSuccess(data) {
   return {
     type: REGISTER_CAR_SUCCESS,
     data,
+  };
+}
+
+export function addProxy(data, callback = () => {}) {
+  return (dispatch, getState) => {
+    dispatch({
+      type: ADD_PROXY_REQUEST,
+    });
+
+    fetch(endpoints.ADD_PROXY, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => {
+        if (!response.ok) {
+          dispatch(addProxyFailure(''));
+          throw new Error(response);
+        }
+        return response;
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('-----data', data);
+        dispatch(addProxySuccess(data));
+        callback();
+      })
+      .catch(() => {
+        console.log('-----error');
+        dispatch(addProxyFailure('error'));
+      });
+  };
+}
+
+export function addProxySuccess(data) {
+  return {
+    type: ADD_PROXY_SUCCESS,
+    data,
+  };
+}
+
+export function addProxyFailure(error) {
+  return {
+    type: ADD_PROXY_FAILURE,
+    error,
   };
 }

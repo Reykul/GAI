@@ -5,6 +5,7 @@ require('./styles.css');
 export default class HomeScreen extends Component {
   state = {
     isModalVisible: false,
+    isProxyModalVisible: false,
   };
   componentDidMount() {
     const { fetchCars } = this.props;
@@ -16,8 +17,16 @@ export default class HomeScreen extends Component {
     this.setState({ isModalVisible: true });
   };
 
+  handleProxyButtonPress = () => {
+    this.setState({ isProxyModalVisible: true });
+  };
+
   handleModalClose = () => {
     this.setState({ isModalVisible: false });
+  };
+
+  handleProxyModalClose = () => {
+    this.setState({ isProxyModalVisible: false });
   };
 
   handleSubmit(event) {
@@ -45,9 +54,25 @@ export default class HomeScreen extends Component {
     }
   }
 
+  handleProxySubmit(event) {
+    const { addProxy } = this.props;
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const allowTo = form.formProxyAllowTo.value;
+    const carId = form.formProxyAuto.value;
+
+    if (allowTo && carId) {
+      addProxy(
+        { allowTo: parseInt(allowTo, 10), carId: parseInt(carId, 10) },
+        () => this.handleProxyModalClose(),
+      );
+    }
+  }
+
   render() {
     const { cars } = this.props;
-    const { isModalVisible } = this.state;
+    const { isModalVisible, isProxyModalVisible } = this.state;
 
     return (
       <div className="HomeScreen">
@@ -78,6 +103,9 @@ export default class HomeScreen extends Component {
           </tbody>
         </Table>
         <div className="buttons">
+          <Button onClick={this.handleProxyButtonPress} variant="outline-info">
+            Add proxy
+          </Button>
           <Button onClick={this.handleButtonPress} variant="outline-dark">
             Register car
           </Button>
@@ -124,6 +152,33 @@ export default class HomeScreen extends Component {
                 <Form.Check type="checkbox" label="Carjacking" />
               </Form.Group>
               <Button type="submit">Register auto</Button>
+            </Form>
+          </Modal.Body>
+        </Modal>
+
+        <Modal
+          size="lg"
+          show={isProxyModalVisible}
+          onHide={this.handleProxyModalClose}
+          aria-labelledby="contained-modal-title-vcenter"
+          centered
+        >
+          <Modal.Header closeButton>
+            <Modal.Title id="example-modal-sizes-title-lg">
+              Add proxy
+            </Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={e => this.handleProxySubmit(e)}>
+              <Form.Group controlId="formProxyAllowTo">
+                <Form.Label>Allow to #</Form.Label>
+                <Form.Control placeholder="Allow to #" />
+              </Form.Group>
+              <Form.Group controlId="formProxyAuto">
+                <Form.Label>Auto #</Form.Label>
+                <Form.Control placeholder="Auto #" />
+              </Form.Group>
+              <Button type="submit">Add proxy</Button>
             </Form>
           </Modal.Body>
         </Modal>
