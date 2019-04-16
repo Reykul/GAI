@@ -41,3 +41,5 @@ export function fetchCarsFailure(error) {
     error,
   };
 }
+
+// export function registerCar()
