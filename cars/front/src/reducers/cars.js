@@ -2,6 +2,7 @@ import {
   FETCH_CARS_REQUEST,
   FETCH_CARS_SUCCESS,
   FETCH_CARS_FAILURE,
+  REGISTER_CAR_SUCCESS,
 } from '../actions/cars';
 
 const INITIAL_STATE = {
@@ -19,6 +20,12 @@ export default (state = INITIAL_STATE, action) => {
 
     case FETCH_CARS_SUCCESS:
       return { ...state, data: action.data, isFetching: false };
+
+    case REGISTER_CAR_SUCCESS:
+      return {
+        ...state,
+        data: [...state.data, action.data],
+      };
 
     case FETCH_CARS_FAILURE:
       return { ...state, isFetching: false };
