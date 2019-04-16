@@ -7,7 +7,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     
     let serverConfig = NIOServerConfig.default(hostname: "localhost", port: 8081)
     services.register(serverConfig)
-    
+ 
     var databases = DatabasesConfig()
     let mysqlConfig = MySQLDatabaseConfig(
         hostname: "localhost",
@@ -25,6 +25,13 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(router, as: Router.self)
     
     var middlewares = MiddlewareConfig()
+    let corsConfiguration = CORSMiddleware.Configuration(
+        allowedOrigin: .all,
+        allowedMethods: [.GET, .POST, .PUT, .OPTIONS, .DELETE, .PATCH],
+        allowedHeaders: [.accept, .authorization, .contentType, .origin, .xRequestedWith, .userAgent, .accessControlAllowOrigin]
+    )
+    let corsMiddleware = CORSMiddleware(configuration: corsConfiguration)
+    middlewares.use(corsMiddleware)
     middlewares.use(LoggerMiddleware.self)
     middlewares.use(ErrorMiddleware.self)
     services.register(middlewares)
