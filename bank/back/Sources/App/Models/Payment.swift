@@ -6,11 +6,13 @@ final class Payment: MySQLModel {
     var id: Int?
     var fromId: Int
     var toId: Int
+    var amount: Double
     
-    init(id: Int? = nil, fromId: Int, toId: Int) {
+    init(id: Int? = nil, fromId: Int, toId: Int, amount: Double) {
         self.id = id
         self.fromId = fromId
         self.toId = toId
+        self.amount = amount
     }
 }
 

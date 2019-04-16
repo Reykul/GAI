@@ -9,8 +9,8 @@ let package = Package(
     dependencies: [
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
-        .package(url: "https://github.com/vapor/fluent-mysql.git", from: "3.0.0")
-
+        .package(url: "https://github.com/vapor/fluent-mysql.git", from: "3.0.0"),
+        .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.0.0-beta.5")
     ],
     targets: [
         .target(name: "App", dependencies: ["FluentMySQL", "Vapor"]),

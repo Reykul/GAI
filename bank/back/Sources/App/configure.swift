@@ -25,11 +25,19 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     services.register(router, as: Router.self)
     
     var middlewares = MiddlewareConfig()
+    let corsConfiguration = CORSMiddleware.Configuration(
+        allowedOrigin: .all,
+        allowedMethods: [.GET, .POST, .PUT, .OPTIONS, .DELETE, .PATCH],
+        allowedHeaders: [.accept, .authorization, .contentType, .origin, .xRequestedWith, .userAgent, .accessControlAllowOrigin, .accessControlRequestHeaders]
+    )
+    let corsMiddleware = CORSMiddleware(configuration: corsConfiguration)
+    middlewares.use(corsMiddleware)
     middlewares.use(LoggerMiddleware.self)
     middlewares.use(ErrorMiddleware.self)
     services.register(middlewares)
     
     var migrations = MigrationConfig()
+    migrations.add(model: SaleContract.self, database: .mysql)
     migrations.add(model: BankAccount.self, database: .mysql)
     migrations.add(model: Payment.self, database: .mysql)
     services.register(migrations)
